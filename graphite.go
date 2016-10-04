@@ -34,6 +34,9 @@ func sendMetrics(status []Status, config Configuration) {
 		if entry.SCur != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".current_sessions"), entry.SCur)
 		}
+		if entry.SLim != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".limit_sessions"), entry.SLim)
+		}
 		if entry.STot != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".total_connections"), entry.STot)
 		}
@@ -46,11 +49,21 @@ func sendMetrics(status []Status, config Configuration) {
 		if entry.EReq != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_request"), entry.EReq)
 		}
-		if entry.Econ != "" {
-			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_connecting"), entry.Econ)
+		if entry.EReqRate != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_request_rate"), entry.EReqRate)
+		}
+
+		if entry.ECon != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_connecting"), entry.ECon)
+		}
+		if entry.EConRate != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_connecting_rate"), entry.EConRate)
 		}
 		if entry.EResp != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_response"), entry.EResp)
+		}
+		if entry.ERespRate != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_response_rate"), entry.ERespRate)
 		}
 		if entry.Chkfail != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".checks_failed"), entry.Chkfail)
@@ -81,6 +94,9 @@ func sendMetrics(status []Status, config Configuration) {
 		}
 		if entry.HRSPO != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".hrsp_other"), entry.HRSPO)
+		}
+		if entry.ReqRate != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".rate_requests"), entry.ReqRate)
 		}
 		if entry.ReqTot != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".total_requests"), entry.ReqTot)

@@ -19,40 +19,52 @@ import (
 	"encoding/csv"
 	"io"
 	"strings"
+	//"bufio"
 )
 
 type Status struct {
-	Type     string
-	Name     string
-	QCur     string
-	SCur     string
-	STot     string
-	BytesIn  string
-	BytesOut string
-	EReq     string
-	Econ     string
-	EResp    string
-	Chkfail  string
-	ChkDown  string
-	Downtime string
-	ChkDur   string
-	HRSP1    string
-	HRSP2    string
-	HRSP3    string
-	HRSP4    string
-	HRSP5    string
-	HRSPO    string
-	ReqTot   string
-	QTime    string
-	CTime    string
-	RTime    string
-	TTime    string
+	Type      string
+	Name      string
+	QCur      string
+	SCur      string
+	SLim      string
+	STot      string
+	BytesIn   string
+	BytesOut  string
+	EReq      string
+	EReqRate  string
+	ECon      string
+	EConRate  string
+	EResp     string
+	ERespRate string
+	Chkfail   string
+	ChkDown   string
+	Downtime  string
+	ChkDur    string
+	HRSP1     string
+	HRSP2     string
+	HRSP3     string
+	HRSP4     string
+	HRSP5     string
+	HRSPO     string
+	ReqRate   string
+	ReqTot    string
+	QTime     string
+	CTime     string
+	RTime     string
+	TTime     string
 }
 
 func parse(page io.ReadCloser) ([]Status, error) {
 	var result = []Status{}
+	// rd := bufio.NewReader(page)
+	// _, _ = rd.ReadString(byte('#')) // throwaway hash prefix
+	// _, _ = rd.ReadString(byte(' ')) // throwaway space
 
 	r := csv.NewReader(page)
+	r.Comment = '#'
+	r.FieldsPerRecord = -1
+	r.TrimLeadingSpace = true
 	records, err := r.ReadAll()
 	page.Close()
 	if err != nil {
@@ -65,6 +77,7 @@ func parse(page io.ReadCloser) ([]Status, error) {
 		item.Name = strings.Join(entry[0:2], "-")
 
 		item.SCur = entry[4]
+		item.SLim = entry[5]
 		item.STot = entry[7]
 		item.BytesIn = entry[8]
 		item.BytesOut = entry[9]
@@ -81,12 +94,13 @@ func parse(page io.ReadCloser) ([]Status, error) {
 			item.HRSP4 = entry[42]
 			item.HRSP5 = entry[43]
 			item.HRSPO = entry[44]
+			item.ReqRate = entry[46]
 			item.ReqTot = entry[48]
 			break
 		case "1": //Backend
 			item.Type = "Backend"
 			item.QCur = entry[2]
-			item.Econ = entry[13]
+			item.ECon = entry[13]
 			item.EResp = entry[14]
 			item.ChkDown = entry[22]
 			item.Downtime = entry[24]
@@ -104,7 +118,7 @@ func parse(page io.ReadCloser) ([]Status, error) {
 		case "2": //Server
 			item.Type = "Server"
 			item.QCur = entry[2]
-			item.Econ = entry[13]
+			item.ECon = entry[13]
 			item.EResp = entry[14]
 			item.Chkfail = entry[21]
 			item.ChkDown = entry[22]

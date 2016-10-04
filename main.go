@@ -16,6 +16,8 @@
 package main
 
 import (
+	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -41,7 +43,80 @@ func main() {
 			continue
 		}
 
+		fmt.Println("Parsed!")
+		// modify the status slice to extrapolate calculated fields
+		computeSyntheticFields(status)
+		fmt.Println("Computed!")
+
 		sendMetrics(status, configuration)
+		fmt.Println("Sent!")
 		wait(configuration)
 	}
+}
+
+func computeSyntheticFields2(status []Status) {
+	for item := range status {
+		fmt.Println(item)
+	}
+}
+
+var last map[string]Status
+
+func computeSyntheticFields(status []Status) {
+	// create delta for EReq, ECon, EResp, total_connections
+
+	if last == nil {
+		last = make(map[string]Status)
+	}
+
+	for i, _ := range status {
+		if lastStatus, ok := last[status[i].Name]; ok {
+			status[i].EReqRate = diffInt(status[i].EReq, lastStatus.EReq)
+			status[i].EConRate = diffInt(status[i].ECon, lastStatus.ECon)
+			status[i].ERespRate = diffInt(status[i].EResp, lastStatus.EResp)
+
+		} else {
+			status[i].EReqRate = status[i].EReq
+			status[i].EConRate = diffInt(status[i].ECon, lastStatus.ECon)
+			status[i].ERespRate = diffInt(status[i].EResp, lastStatus.EResp)
+		}
+	}
+
+	last = mapItemsByName(status)
+}
+
+func diffInt(current, last string) string {
+	currentI, err := strconv.Atoi(current)
+	if err != nil {
+		return ""
+	}
+	lastI, err := strconv.Atoi(last)
+	if err != nil {
+		lastI = 0
+	}
+	return strconv.Itoa(currentI - lastI)
+}
+
+func mapItemsByName(status []Status) map[string]Status {
+	var items = map[string]Status{}
+
+	for _, item := range status {
+		items[item.Name] = item
+	}
+
+	return items
+}
+
+func mapItemsByType(status []Status, itemType string) map[string]Status {
+	var items = map[string]Status{}
+
+	for _, item := range status {
+		switch item.Type {
+		case itemType:
+			items[item.Name] = item
+			continue
+		}
+	}
+
+	return items
 }
