@@ -16,7 +16,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 )
@@ -43,20 +42,11 @@ func main() {
 			continue
 		}
 
-		fmt.Println("Parsed!")
 		// modify the status slice to extrapolate calculated fields
 		computeSyntheticFields(status)
-		fmt.Println("Computed!")
 
 		sendMetrics(status, configuration)
-		fmt.Println("Sent!")
 		wait(configuration)
-	}
-}
-
-func computeSyntheticFields2(status []Status) {
-	for item := range status {
-		fmt.Println(item)
 	}
 }
 
