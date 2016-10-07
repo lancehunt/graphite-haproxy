@@ -29,6 +29,7 @@ type Status struct {
 	SCur      string
 	SLim      string
 	STot      string
+	STotRate  string
 	BytesIn   string
 	BytesOut  string
 	EReq      string

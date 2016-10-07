@@ -40,6 +40,10 @@ func sendMetrics(status []Status, config Configuration) {
 		if entry.STot != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".total_connections"), entry.STot)
 		}
+		if entry.STotRate != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".total_connection_rate"), entry.STotRate)
+		}
+
 		if entry.BytesIn != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".bytes_in"), entry.BytesIn)
 		}

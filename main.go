@@ -64,11 +64,13 @@ func computeSyntheticFields(status []Status) {
 			status[i].EReqRate = diffInt(status[i].EReq, lastStatus.EReq)
 			status[i].EConRate = diffInt(status[i].ECon, lastStatus.ECon)
 			status[i].ERespRate = diffInt(status[i].EResp, lastStatus.EResp)
+			status[i].STotRate = diffInt(status[i].STot, lastStatus.STot)
 
 		} else {
-			status[i].EReqRate = status[i].EReq
-			status[i].EConRate = diffInt(status[i].ECon, lastStatus.ECon)
-			status[i].ERespRate = diffInt(status[i].EResp, lastStatus.EResp)
+			status[i].EReqRate = "0"
+			status[i].EConRate = "0"
+			status[i].ERespRate = "0"
+			status[i].STotRate = "0"
 		}
 	}
 
