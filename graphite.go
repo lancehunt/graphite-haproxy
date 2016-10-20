@@ -17,6 +17,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/marpaia/graphite-golang"
 )
 
@@ -56,7 +57,6 @@ func sendMetrics(status []Status, config Configuration) {
 		if entry.EReqRate != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_request_rate"), entry.EReqRate)
 		}
-
 		if entry.ECon != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".errors_connecting"), entry.ECon)
 		}
@@ -116,6 +116,9 @@ func sendMetrics(status []Status, config Configuration) {
 		}
 		if entry.TTime != "" {
 			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".time_total_session"), entry.TTime)
+		}
+		if entry.Act != "" {
+			Graphite.SimpleSend(fmt.Sprint(config.MetricsPrefix, ".haproxy.", entry.Type, ".", entry.Name, ".active_servers"), entry.Act)
 		}
 	}
 }
