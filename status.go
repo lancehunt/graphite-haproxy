@@ -54,6 +54,7 @@ type Status struct {
 	CTime     string
 	RTime     string
 	TTime     string
+	Act       string
 }
 
 func parse(page io.ReadCloser) ([]Status, error) {
@@ -103,6 +104,7 @@ func parse(page io.ReadCloser) ([]Status, error) {
 			item.QCur = entry[2]
 			item.ECon = entry[13]
 			item.EResp = entry[14]
+			item.Act = entry[19]
 			item.ChkDown = entry[22]
 			item.Downtime = entry[24]
 			item.HRSP1 = entry[39]
@@ -121,6 +123,7 @@ func parse(page io.ReadCloser) ([]Status, error) {
 			item.QCur = entry[2]
 			item.ECon = entry[13]
 			item.EResp = entry[14]
+			item.Act = entry[19]
 			item.Chkfail = entry[21]
 			item.ChkDown = entry[22]
 			item.Downtime = entry[24]
